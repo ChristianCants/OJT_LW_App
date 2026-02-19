@@ -1,8 +1,8 @@
 
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = 'https://ofbrfvjialfcjxgkqdkg.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9mYnJmdmppYWxmY2p4Z2txZGtnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3OTU3NzIsImV4cCI6MjA4NjM3MTc3Mn0.5fos4jR--MxHVmQtPugM5H7PLKYufJ1udwLGne3fiwA';
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -78,11 +78,29 @@ export const saveInternProfile = async (profileData) => {
   return { data, error };
 };
 
+export const updateInternProfile = async (id, updateData) => {
+  const { data, error } = await supabase
+    .from('intern_profile')
+    .update(updateData)
+    .eq('id', id)
+    .select();
+  return { data, error };
+};
+
 // Device Functions
 export const saveDevice = async (deviceData) => {
   const { data, error } = await supabase
     .from('devices')
     .insert([deviceData])
+    .select();
+  return { data, error };
+};
+
+export const updateDevice = async (id, updateData) => {
+  const { data, error } = await supabase
+    .from('devices')
+    .update(updateData)
+    .eq('id', id)
     .select();
   return { data, error };
 };
@@ -93,4 +111,44 @@ export const getDevices = async (userId) => {
     .select('*')
     .eq('user_id', userId);
   return { data, error };
+};
+
+export const getAllInternProfiles = async () => {
+  // We select all fields from intern_profile and also reach into users to get their devices
+  const { data, error } = await supabase
+    .from('intern_profile')
+    .select(`
+            *,
+            users:user_id (
+                devices (*)
+            )
+        `)
+    .order('created_at', { ascending: false });
+
+  // Flatten the devices for easier consumption in the UI
+  const flattenedData = data?.map(profile => ({
+    ...profile,
+    devices: profile.users?.devices || []
+  }));
+
+  return { data: flattenedData, error };
+};
+
+export const getDashboardStats = async () => {
+  const { count: totalInterns, error: e1 } = await supabase
+    .from('intern_profile')
+    .select('*', { count: 'exact', head: true });
+
+  const { count: activeInterns, error: e2 } = await supabase
+    .from('intern_profile')
+    .select('*', { count: 'exact', head: true })
+    .eq('status', 'Active');
+
+  return {
+    data: {
+      totalInterns: totalInterns || 0,
+      activeInterns: activeInterns || 0
+    },
+    error: e1 || e2
+  };
 };

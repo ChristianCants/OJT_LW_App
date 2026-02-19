@@ -1,3 +1,5 @@
+import React, { useState, useEffect } from 'react';
+import { getDashboardStats } from '../../services';
 import {
     Plus,
     ArrowUpRight,
@@ -19,13 +21,25 @@ const glassCard = {
     boxShadow: '0 8px 32px rgba(31,38,135,0.08), inset 0 1px 0 rgba(255,255,255,0.4)',
     borderRadius: '24px',
 };
-
 const DashboardOverview = () => {
-    // ── Data ────────────────────────────────────────────────
+    const [realStats, setRealStats] = useState({ totalInterns: 0, activeInterns: 0 });
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            const { data } = await getDashboardStats();
+            if (data) {
+                setRealStats(data);
+            }
+            setLoading(false);
+        };
+        fetchStats();
+    }, []);
+
     const stats = [
-        { label: 'Total Interns', value: 0, subtitle: 'No data', trend: '0', isPrimary: true },
+        { label: 'Total Interns', value: realStats.totalInterns, subtitle: 'Total registered', trend: '+1', isPrimary: true },
         { label: 'Ended Internships', value: 0, subtitle: 'No data', trend: '0', isPrimary: false },
-        { label: 'Active Interns', value: 0, subtitle: 'No data', trend: '0', isPrimary: false },
+        { label: 'Active Interns', value: realStats.activeInterns, subtitle: 'Currently enrolled', trend: '+1', isPrimary: false },
         { label: 'Pending Applications', value: 0, subtitle: 'No data', trend: null, isPrimary: false },
     ];
 

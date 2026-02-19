@@ -25,13 +25,25 @@ const glass = {
 };
 
 // Mock data
-// Mock data
-const mockActivities = [];
+const mockActivities = [
+    { id: 1, title: 'Week 1 Report', type: 'Report', date: '2026-02-10', maxScore: 100, submissions: 12, status: 'Closed' },
+    { id: 2, title: 'React Basics Quiz', type: 'Quiz', date: '2026-02-12', maxScore: 50, submissions: 10, status: 'Closed' },
+    { id: 3, title: 'Final Project', type: 'Project', date: '2026-02-15', maxScore: 200, submissions: 8, status: 'Active' },
+    { id: 4, title: 'Code Review', type: 'Code', date: '2026-02-18', maxScore: 100, submissions: 5, status: 'Upcoming' },
+];
 
-const mockInterns = [];
+const mockInterns = [
+    { id: 1, name: 'John Doe', avatar: 'JD' },
+    { id: 2, name: 'Jane Smith', avatar: 'JS' },
+    { id: 3, name: 'Alice Johnson', avatar: 'AJ' },
+];
 
-// Mock scores: { [internId]: { [internId]: score } }
-const mockScores = {};
+// Mock scores: { [internId]: { [activityId]: score } }
+const mockScores = {
+    1: { 1: 95, 2: 48, 3: 180 },
+    2: { 1: 88, 2: 45, 3: 190 },
+    3: { 1: 92, 2: 42, 3: 175 },
+};
 
 const ActivitiesModule = () => {
     const [activeView, setActiveView] = useState('activities'); // 'activities' or 'scoring'
@@ -94,9 +106,8 @@ const ActivitiesModule = () => {
             </div>
 
             {/* Content Views */}
-            {activeView === 'activities' ? (
+            {activeView === 'activities' && (
                 <div className="grid grid-cols-1 gap-4">
-                    {/* Activity Cards */}
                     {mockActivities.map(activity => (
                         <div
                             key={activity.id}
@@ -140,8 +151,9 @@ const ActivitiesModule = () => {
                         </div>
                     ))}
                 </div>
-            ) : (
-                /* Scoring Board View */
+            )}
+
+            {activeView === 'scoring' && (
                 <div
                     className="rounded-2xl overflow-hidden pb-2"
                     style={glass}
@@ -170,7 +182,6 @@ const ActivitiesModule = () => {
                             </thead>
                             <tbody className="divide-y divide-gray-200/40">
                                 {mockInterns.map(intern => {
-                                    // Calculate total
                                     let totalScore = 0;
                                     let maxTotal = 0;
                                     mockActivities.forEach(act => {

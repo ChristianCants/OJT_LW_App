@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { supabase } from '../services';
+import { supabase, getDashboardStats } from '../services';
 import { useNavigate } from 'react-router-dom';
 import {
     Bell, Search, Mail,
-    LayoutDashboard, Users, Calendar, PieChart,
+    LayoutDashboard, Users, Calendar, PieChart, BarChart3,
     Settings, LogOut, HelpCircle, UserCheck,
     Menu, X, CheckCircle, ClipboardList, FileText,
     Sun, Moon
@@ -15,6 +15,7 @@ import TaskManagement from '../components/admin/TaskManagement';
 import CreateUser from '../components/admin/CreateUser';
 import InternsModule from '../components/admin/InternsModule';
 import ActivitiesModule from '../components/admin/ActivitiesModule';
+import ScoringMetricsModule from '../components/admin/ScoringMetricsModule';
 import EvaluationModule from '../components/admin/EvaluationModule';
 import AnalyticsModule from '../components/admin/AnalyticsModule';
 
@@ -34,6 +35,15 @@ const AdminDashboard = () => {
     const [activeTab, setActiveTab] = useState('dashboard');
     const { theme, toggleTheme } = useTheme();
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const [internCount, setInternCount] = useState(0);
+
+    useEffect(() => {
+        const fetchStats = async () => {
+            const { data } = await getDashboardStats();
+            if (data) setInternCount(data.totalInterns);
+        };
+        fetchStats();
+    }, []);
 
     useEffect(() => {
         const checkAdmin = async () => {
@@ -55,9 +65,10 @@ const AdminDashboard = () => {
 
     const menuItems = [
         { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-        { id: 'interns', label: 'Interns', icon: Users, badge: '12+' },
+        { id: 'interns', label: 'Interns', icon: Users, badge: internCount > 0 ? `${internCount}+` : null },
         { id: 'attendance', label: 'Attendance', icon: Calendar },
         { id: 'activities', label: 'Activities', icon: ClipboardList },
+        { id: 'metrics', label: 'Scoring Metrics', icon: BarChart3 },
         { id: 'evaluations', label: 'Evaluations', icon: FileText },
         { id: 'analytics', label: 'Analytics', icon: PieChart },
     ];
@@ -211,6 +222,7 @@ const AdminDashboard = () => {
                         {activeTab === 'interns' && <InternsModule onAddIntern={() => setShowAddInternModal(true)} />}
                         {activeTab === 'attendance' && <AttendanceModule />}
                         {activeTab === 'activities' && <ActivitiesModule />}
+                        {activeTab === 'metrics' && <ScoringMetricsModule />}
                         {activeTab === 'evaluations' && <EvaluationModule />}
                         {activeTab === 'analytics' && <AnalyticsModule />}
 
