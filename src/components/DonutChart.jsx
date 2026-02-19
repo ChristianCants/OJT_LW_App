@@ -4,7 +4,6 @@ const DonutChart = ({ data, size = 180, strokeWidth = 30 }) => {
     const radius = (size - strokeWidth) / 2;
     const circumference = radius * 2 * Math.PI;
 
-    let currentOffset = 0;
     const total = data.reduce((sum, item) => sum + item.value, 0);
 
     return (
@@ -24,8 +23,8 @@ const DonutChart = ({ data, size = 180, strokeWidth = 30 }) => {
                     {/* Segments */}
                     {data.map((item, index) => {
                         const segmentLength = (item.value / total) * circumference;
-                        const offset = currentOffset;
-                        currentOffset += segmentLength;
+                        // Calculate offset by summing previous values
+                        const offset = data.slice(0, index).reduce((sum, prev) => sum + (prev.value / total) * circumference, 0);
 
                         return (
                             <circle

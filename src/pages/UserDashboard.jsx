@@ -10,6 +10,7 @@ const UserDashboard = () => {
     const [user, setUser] = useState(null);
     const [activeTab, setActiveTab] = useState('dashboard');
     const [profileChecked, setProfileChecked] = useState(false);
+    const [profileData, setProfileData] = useState(null);
 
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
@@ -23,19 +24,12 @@ const UserDashboard = () => {
                 if (!data) {
                     navigate('/complete-profile');
                 } else {
+                    setProfileData(data); // Store profile data
                     setProfileChecked(true);
                 }
             });
         }
     }, [navigate]);
-
-    const refreshUser = () => {
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            const parsedUser = JSON.parse(storedUser);
-            setUser(parsedUser);
-        }
-    };
 
     if (!user || !profileChecked) return null;
 
@@ -44,7 +38,7 @@ const UserDashboard = () => {
             {
                 activeTab === 'dashboard' ? (
                     <div className="animate-fade-in h-full">
-                        <DashboardModule user={user} />
+                        <DashboardModule user={user} profileData={profileData} />
                     </div>
                 ) : (
                     <div className="animate-fade-in h-full">
@@ -57,9 +51,3 @@ const UserDashboard = () => {
 };
 
 export default UserDashboard;
-
-// Re-declare sub components to keep file valid if they were used (though they are not used in the simplified view above, keeping standard)
-const StatCard = ({ icon: Icon, label, value, unit, color, bgColor }) => <div />;
-const TimelineItem = ({ time, title, subtitle, active }) => <div />;
-const TableRow = ({ day, task, status, duration, score }) => <tr />;
-const FileItem = ({ name, size, color, bg }) => <div />;

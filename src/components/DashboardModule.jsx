@@ -194,7 +194,7 @@ const DashboardModule = ({ user, profileData, onProfileUpdate }) => {
         school: user?.school || profileData?.course || ''
     });
     const [isEditing, setIsEditing] = useState(false);
-    const [isUploading, setIsUploading] = useState(false);
+    const [, setIsUploading] = useState(false);
     const [isSchoolDropdownOpen, setIsSchoolDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
 
@@ -305,16 +305,6 @@ const DashboardModule = ({ user, profileData, onProfileUpdate }) => {
         }
     };
 
-    const handleSchoolChange = (e) => {
-        const selectedSchool = e.target.value;
-        const logoPath = SCHOOL_LOGOS[selectedSchool] || null;
-
-        setProfile(prev => ({
-            ...prev,
-            school: selectedSchool,
-            schoolLogo: logoPath
-        }));
-    };
 
     const handleSaveProfile = async () => {
         try {
@@ -885,29 +875,85 @@ const DashboardModule = ({ user, profileData, onProfileUpdate }) => {
                 {/* 3. Stats & Skills */}
                 <div className="lg:col-span-5 flex flex-col gap-6">
                     {/* Top Bento Row */}
-                    <div className="grid grid-cols-2 gap-4">
-                        <KpiCard title="Efficiency" value="98%" icon={Zap} bg="lime" />
-                        <KpiCard title="Level" value="04" icon={User} bg="black" subtext="Senior Intern" />
-                        <div className="col-span-2">
-                            <div className="bg-white rounded-[32px] p-6 shadow-sm border border-white h-full flex items-center justify-between group cursor-pointer hover:shadow-md transition-shadow">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-[#ccff00] group-hover:text-black transition-colors">
-                                        <Target size={20} />
-                                    </div>
-                                    <div>
-                                        <p className="font-bold text-lg">Weekly Goals</p>
-                                        <p className="text-xs text-gray-400">4 tasks remaining</p>
-                                    </div>
-                                </div>
-                                <div className="w-12 h-12 rounded-full border border-gray-100 flex items-center justify-center group-hover:border-[#ccff00] transition-colors">
-                                    <ChevronDown size={20} className="-rotate-90 text-gray-300 group-hover:text-black" />
-                                </div>
-                            </div>
+                    <div className="grid grid-cols-2 gap-4 h-[340px]">
+                        <div className="flex flex-col gap-4 h-full">
+                            <KpiCard
+                                title="Proficiency Level"
+                                value="Standard"
+                                icon={Zap}
+                                bg="lime"
+                                subtext="Current Rating"
+                            />
+                            <KpiCard
+                                title="Batch No."
+                                value={profileData?.batch_number || "Batch 1"}
+                                icon={User} // Or GraduationCap if imported
+                                bg="black"
+                                subtext={profileData?.school || "University of Cebu"}
+                            />
+                        </div>
+                        <div className="col-span-1 h-full">
+                            <TimeWeatherWidget />
                         </div>
                     </div>
                 </div>
             </div>
         </div >
+    );
+};
+
+// Weather Widget Component
+const TimeWeatherWidget = () => {
+    const [time, setTime] = useState(new Date());
+
+    useEffect(() => {
+        const timer = setInterval(() => setTime(new Date()), 1000);
+        return () => clearInterval(timer);
+    }, []);
+
+    const formatTime = (date) => {
+        return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+    };
+
+    const formatDate = (date) => {
+        return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    };
+
+    return (
+        <div className="bg-white rounded-[32px] p-6 shadow-sm border border-white h-full flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-all">
+            {/* Background Decoration */}
+            <div className="absolute top-[-20%] right-[-10%] w-24 h-24 bg-blue-100 rounded-full blur-2xl opacity-60 pointer-events-none" />
+            <div className="absolute bottom-[-10%] left-[-10%] w-20 h-20 bg-yellow-100 rounded-full blur-2xl opacity-60 pointer-events-none" />
+
+            <div className="flex justify-between items-start z-10">
+                <div>
+                    <p className="text-gray-500 text-xs font-bold uppercase tracking-wider">{formatDate(time)}</p>
+                    <p className="text-3xl font-bold text-gray-900 mt-1 tracking-tight">{formatTime(time)}</p>
+                </div>
+                <div className="bg-blue-50 p-2 rounded-full">
+                    {/* Simple Cloud/Sun Icon */}
+                    <div className="relative w-6 h-6">
+                        <span className="absolute top-0 right-0 w-3 h-3 bg-yellow-400 rounded-full shadow-sm" />
+                        <span className="absolute bottom-0 left-0 w-5 h-3 bg-white rounded-full shadow-sm border border-gray-100 z-10" />
+                        <span className="absolute bottom-0 right-1 w-4 h-4 bg-white rounded-full shadow-sm border border-gray-100 z-10" />
+                    </div>
+                </div>
+            </div>
+
+            <div className="flex items-end justify-between z-10 mt-4">
+                <div>
+                    <div className="flex items-center gap-1">
+                        <span className="text-4xl font-light text-gray-900">28°</span>
+                        <span className="text-sm font-medium text-gray-500 mb-4">C</span>
+                    </div>
+                    <p className="text-xs text-gray-400 font-medium">Cebu City</p>
+                </div>
+                <div className="text-right">
+                    <p className="text-xs font-medium text-gray-500">Partly Cloudy</p>
+                    <p className="text-[10px] text-gray-400">H: 31° L: 24°</p>
+                </div>
+            </div>
+        </div>
     );
 };
 
