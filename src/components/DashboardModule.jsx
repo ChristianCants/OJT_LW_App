@@ -194,7 +194,7 @@ const DashboardModule = ({ user, profileData, onProfileUpdate }) => {
         school: user?.school || profileData?.course || ''
     });
     const [isEditing, setIsEditing] = useState(false);
-    const [isUploading, setIsUploading] = useState(false);
+    const [, setIsUploading] = useState(false);
     const [isSchoolDropdownOpen, setIsSchoolDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
 
@@ -305,16 +305,6 @@ const DashboardModule = ({ user, profileData, onProfileUpdate }) => {
         }
     };
 
-    const handleSchoolChange = (e) => {
-        const selectedSchool = e.target.value;
-        const logoPath = SCHOOL_LOGOS[selectedSchool] || null;
-
-        setProfile(prev => ({
-            ...prev,
-            school: selectedSchool,
-            schoolLogo: logoPath
-        }));
-    };
 
     const handleSaveProfile = async () => {
         try {
