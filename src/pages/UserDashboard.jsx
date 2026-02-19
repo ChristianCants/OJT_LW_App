@@ -10,6 +10,7 @@ const UserDashboard = () => {
     const [user, setUser] = useState(null);
     const [activeTab, setActiveTab] = useState('dashboard');
     const [profileChecked, setProfileChecked] = useState(false);
+    const [profileData, setProfileData] = useState(null);
 
     useEffect(() => {
         const storedUser = localStorage.getItem('user');
@@ -23,6 +24,7 @@ const UserDashboard = () => {
                 if (!data) {
                     navigate('/complete-profile');
                 } else {
+                    setProfileData(data); // Store profile data
                     setProfileChecked(true);
                 }
             });
@@ -44,7 +46,7 @@ const UserDashboard = () => {
             {
                 activeTab === 'dashboard' ? (
                     <div className="animate-fade-in h-full">
-                        <DashboardModule user={user} />
+                        <DashboardModule user={user} profileData={profileData} />
                     </div>
                 ) : (
                     <div className="animate-fade-in h-full">
