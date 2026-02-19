@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { saveInternProfile, saveDevice, getInternProfile } from '../services';
+import Galaxy from '../components/Galaxy';
 
 const SCHOOLS = [
     // Major Universities in Cebu City
@@ -179,10 +180,20 @@ const CompleteProfile = () => {
     return (
         <div className="min-h-screen bg-[#050505] text-white font-sans relative overflow-hidden">
             {/* Ambient background */}
-            <div className="absolute inset-0 pointer-events-none">
-                <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-yellow-400/5 blur-[120px]" />
-                <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-purple-500/5 blur-[120px]" />
-                <div className="absolute top-[40%] left-[50%] w-[30%] h-[30%] rounded-full bg-green-400/3 blur-[100px]" />
+            <div className="absolute inset-0 pointer-events-none z-0">
+                <Galaxy
+                    starSpeed={0.5}
+                    density={1}
+                    hueShift={140}
+                    speed={1}
+                    glowIntensity={0.45}
+                    saturation={0}
+                    mouseRepulsion
+                    repulsionStrength={1.5}
+                    twinkleIntensity={0.3}
+                    rotationSpeed={0.1}
+                    transparent
+                />
             </div>
 
             <div className="relative z-10 max-w-3xl mx-auto px-4 py-8 sm:py-12">
