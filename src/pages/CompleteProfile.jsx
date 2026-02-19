@@ -182,17 +182,18 @@ const CompleteProfile = () => {
             {/* Ambient background */}
             <div className="absolute inset-0 pointer-events-none z-0">
                 <Galaxy
-                    starSpeed={0.5}
-                    density={1}
-                    hueShift={140}
-                    speed={1}
-                    glowIntensity={0.45}
-                    saturation={0}
                     mouseRepulsion
-                    repulsionStrength={1.5}
+                    mouseInteraction
+                    density={1}
+                    glowIntensity={0.3}
+                    saturation={0}
+                    hueShift={140}
                     twinkleIntensity={0.3}
                     rotationSpeed={0.1}
-                    transparent
+                    repulsionStrength={2}
+                    autoCenterRepulsion={0}
+                    starSpeed={0.5}
+                    speed={1}
                 />
             </div>
 
