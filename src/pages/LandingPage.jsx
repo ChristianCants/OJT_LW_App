@@ -468,17 +468,19 @@ const ServicesGrid = () => {
                         whileHover={{ scale: 1.02 }}
                         className="col-span-1 md:col-span-2 relative rounded-3xl group cursor-pointer overflow-hidden"
                     >
-                        <img src="https://images.unsplash.com/photo-1627398242454-45a1465c2479?q=80&w=2000&auto=format&fit=crop" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-60" alt="Web Development" />
+                        <video
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        >
+                            <source src="/Web Dev.mp4" type="video/mp4" />
+                        </video>
                         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
                         <div className="absolute top-8 left-8 z-10">
                             <h3 className="text-white text-3xl font-medium mb-2">Web Development</h3>
                             <p className="text-gray-300 text-sm max-w-md">Build modern, responsive web applications using React, Next.js, and full-stack technologies with AI-assisted coding.</p>
-                        </div>
-                        {/* Code animation */}
-                        <div className="absolute bottom-8 right-8 z-10 opacity-30 font-mono text-xs text-cyan-400 hidden md:block">
-                            <div>&lt;div className="app"&gt;</div>
-                            <div>&nbsp;&nbsp;&lt;Component /&gt;</div>
-                            <div>&lt;/div&gt;</div>
                         </div>
                     </motion.div>
 
@@ -487,18 +489,17 @@ const ServicesGrid = () => {
                         whileHover={{ scale: 1.02 }}
                         className="col-span-1 md:col-span-1 lg:row-span-2 relative rounded-3xl group cursor-pointer overflow-hidden bg-[#1a1a2e]"
                     >
-                        <div className="absolute inset-0 z-0">
-                            <img
-                                src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=2070&auto=format&fit=crop"
-                                alt="AI Matrix Face"
-                                className="w-full h-full object-cover opacity-50 mix-blend-overlay transition-transform duration-700 group-hover:scale-110"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-b from-[#1a1a2e]/80 via-[#1a1a2e]/60 to-[#1a1a2e]/90" />
-                        </div>
-                        <div className="absolute inset-0 opacity-20 flex justify-center gap-4 p-8 z-0">
-                            {[...Array(5)].map((_, i) => (
-                                <div key={i} className="w-px h-full bg-gradient-to-b from-transparent via-white to-transparent opacity-30" />
-                            ))}
+                        <div className="absolute inset-0 z-0 text-white">
+                            <video
+                                autoPlay
+                                loop
+                                muted
+                                playsInline
+                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                            >
+                                <source src="/LLM.mp4" type="video/mp4" />
+                            </video>
+                            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80" />
                         </div>
                         <div className="absolute top-8 left-8 right-8 z-10">
                             <h3 className="text-white text-3xl font-medium mb-3">LLM & Prompt Engineering</h3>
@@ -520,7 +521,15 @@ const ServicesGrid = () => {
                         whileHover={{ scale: 1.02 }}
                         className="col-span-1 md:col-span-1 relative rounded-3xl group cursor-pointer overflow-hidden"
                     >
-                        <img src="https://images.unsplash.com/photo-1544396821-4dd40b938ad3?q=80&w=1664&auto=format&fit=crop" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-70" alt="Genealogy" />
+                        <video
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        >
+                            <source src="/Geneology.mp4" type="video/mp4" />
+                        </video>
                         <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                         <div className="absolute top-8 left-8 z-10">
                             <h3 className="text-white text-3xl font-medium mb-2">Genealogy</h3>
@@ -535,7 +544,15 @@ const ServicesGrid = () => {
                         whileHover={{ scale: 1.02 }}
                         className="col-span-1 md:col-span-1 relative rounded-3xl group cursor-pointer overflow-hidden"
                     >
-                        <img src="https://images.unsplash.com/photo-1556438064-2d7646166914?q=80&w=2070&auto=format&fit=crop" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-70" alt="Game Development" />
+                        <video
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        >
+                            <source src="/Game Dev.mp4" type="video/mp4" />
+                        </video>
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                         <div className="absolute top-8 left-8 z-10">
                             <h3 className="text-white text-3xl font-medium mb-2">Game Development</h3>
