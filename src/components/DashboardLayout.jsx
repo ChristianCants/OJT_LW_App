@@ -30,7 +30,7 @@ const DashboardLayout = ({ children, user, activeTab, onTabChange }) => {
         { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
         { id: 'analytics', label: 'Analytics', icon: PieChart },
         { id: 'members', label: 'Evaluation', icon: FileText },
-        { id: 'activity', label: 'Reports', icon: BarChart2 },
+        { id: 'requirements', label: 'Requirements', icon: BarChart2 },
     ];
 
     return (

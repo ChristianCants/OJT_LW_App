@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '../components/DashboardLayout';
 import ActivityModule from '../components/ActivityModule';
 import DashboardModule from '../components/DashboardModule';
+import RequirementsModule from '../components/RequirementsModule';
 import { getInternProfile } from '../services';
 
 const UserDashboard = () => {
@@ -39,6 +40,10 @@ const UserDashboard = () => {
                 activeTab === 'dashboard' ? (
                     <div className="animate-fade-in h-full">
                         <DashboardModule user={user} profileData={profileData} />
+                    </div>
+                ) : activeTab === 'requirements' ? (
+                    <div className="animate-fade-in h-full">
+                        <RequirementsModule />
                     </div>
                 ) : (
                     <div className="animate-fade-in h-full">
