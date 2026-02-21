@@ -18,17 +18,17 @@ import {
 } from 'lucide-react';
 
 const requirements = [
-    { id: 1, title: "Confirmation Letter", icon: FileText, color: "text-blue-500", bg: "bg-blue-50", url: "#" },
-    { id: 2, title: "Device Information", icon: Smartphone, color: "text-purple-500", bg: "bg-purple-50", url: "#" },
-    { id: 3, title: "E-Signature", icon: PenTool, color: "text-indigo-500", bg: "bg-indigo-50", url: "#" },
-    { id: 4, title: "Endorsement", icon: Shield, color: "text-emerald-500", bg: "bg-emerald-50", url: "#" },
-    { id: 5, title: "Grade Slip", icon: Activity, color: "text-orange-500", bg: "bg-orange-50", url: "#" },
-    { id: 6, title: "ID", icon: User, color: "text-cyan-500", bg: "bg-cyan-50", url: "#" },
-    { id: 7, title: "MBTI", icon: BrainCircuit, color: "text-pink-500", bg: "bg-pink-50", url: "#" },
-    { id: 8, title: "Study Load", icon: BookOpen, color: "text-rose-500", bg: "bg-rose-50", url: "#" },
-    { id: 9, title: "Training Activities", icon: Activity, color: "text-amber-500", bg: "bg-amber-50", url: "#" },
-    { id: 10, title: "Weekly Activities", icon: Calendar, color: "text-lime-500", bg: "bg-lime-50", url: "#" },
-    { id: 11, title: "WhatsApp QR ID", icon: MessageCircle, color: "text-green-500", bg: "bg-green-50", url: "#" },
+    { id: 1, title: "Confirmation Letter", icon: FileText, color: "text-blue-500", bg: "bg-blue-50", url: "https://drive.google.com/drive/folders/1o5XsupnKhS9THTvhKQgRAsFFIlyr7ObZ?usp=sharing" },
+    { id: 2, title: "Device Information", icon: Smartphone, color: "text-purple-500", bg: "bg-purple-50", url: "https://drive.google.com/drive/folders/10c7J9dGGe4VfgUjdsN812L7MuBYGlj5N?usp=sharing" },
+    { id: 3, title: "E-Signature", icon: PenTool, color: "text-indigo-500", bg: "bg-indigo-50", url: "https://drive.google.com/drive/folders/11Q09LIhE7Koo6vJ4THVa3CPP_INc07hp?usp=sharing" },
+    { id: 4, title: "Endorsement Letter", icon: Shield, color: "text-emerald-500", bg: "bg-emerald-50", url: "https://drive.google.com/drive/folders/1_86Z9l9--le5RjgOaPC8hdOY3xqPzKrv?usp=sharing" },
+    { id: 5, title: "Grade Slip", icon: Activity, color: "text-orange-500", bg: "bg-orange-50", url: "https://drive.google.com/drive/folders/1E34fDcNIomm0NToTM4SxhUoFEEpRDeHT?usp=sharing" },
+    { id: 6, title: "ID", icon: User, color: "text-cyan-500", bg: "bg-cyan-50", url: "https://drive.google.com/drive/folders/1-BHRbl9EqbqItZK6_xHqHI9YyPM_PA7W?usp=sharing" },
+    { id: 7, title: "MBTI", icon: BrainCircuit, color: "text-pink-500", bg: "bg-pink-50", url: "https://drive.google.com/drive/folders/1Wl_7AWyJEasvTc0NklE5Ax-tatmxICSh?usp=sharing" },
+    { id: 8, title: "Study Load", icon: BookOpen, color: "text-rose-500", bg: "bg-rose-50", url: "https://drive.google.com/drive/folders/1KD5tYKSwy838e6Dn1Rkxa_gTiLYWFK1X?usp=sharing" },
+    { id: 9, title: "Training Activities", icon: Activity, color: "text-amber-500", bg: "bg-amber-50", url: "https://drive.google.com/drive/folders/1y7fKKdzvPMFsnkT-4A3ZXZRXZU1qTjrJ?usp=sharing" },
+    { id: 10, title: "Weekly Activities", icon: Calendar, color: "text-lime-500", bg: "bg-lime-50", url: "https://drive.google.com/drive/folders/1qKHc9On5AYYWzEjcHfqX5VY14DqMyWbr?usp=sharing" },
+    { id: 11, title: "WhatsApp QR ID", icon: MessageCircle, color: "text-green-500", bg: "bg-green-50", url: "https://drive.google.com/drive/folders/1ZoCN0s7BrVDmuStLu6srgl9cO_HeF97i?usp=sharing" },
 ];
 
 const RequirementsModule = () => {
