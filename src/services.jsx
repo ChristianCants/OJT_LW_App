@@ -135,20 +135,47 @@ export const getAllInternProfiles = async () => {
 };
 
 export const getDashboardStats = async () => {
-  const { count: totalInterns, error: e1 } = await supabase
-    .from('intern_profile')
-    .select('*', { count: 'exact', head: true });
+  try {
+    const { count: totalInterns, error: e1 } = await supabase
+      .from('intern_profile')
+      .select('*', { count: 'exact', head: true });
 
-  const { count: activeInterns, error: e2 } = await supabase
-    .from('intern_profile')
-    .select('*', { count: 'exact', head: true })
-    .eq('status', 'Active');
+    const { count: activeInterns, error: e2 } = await supabase
+      .from('intern_profile')
+      .select('*', { count: 'exact', head: true })
+      .eq('status', 'Active');
 
-  return {
-    data: {
-      totalInterns: totalInterns || 0,
-      activeInterns: activeInterns || 0
-    },
-    error: e1 || e2
-  };
+    if (e1 || e2) throw e1 || e2;
+
+    return {
+      data: {
+        totalInterns: totalInterns || 0,
+        activeInterns: activeInterns || 0
+      },
+      error: null
+    };
+  } catch (error) {
+    console.error('Error fetching dashboard stats:', error);
+    return { data: { totalInterns: 0, activeInterns: 0 }, error };
+  }
 };
+
+// Activity & Evaluation Functions
+export const getUserActivities = async (userId) => {
+  const { data, error } = await supabase
+    .from('activities')
+    .select('*')
+    .eq('user_id', userId)
+    .order('date', { ascending: false });
+  return { data, error };
+};
+
+export const getUserEvaluations = async (userId) => {
+  const { data, error } = await supabase
+    .from('evaluations')
+    .select('*')
+    .eq('user_id', userId)
+    .order('date', { ascending: false });
+  return { data, error };
+};
+

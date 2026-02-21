@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
     Search,
     SlidersHorizontal,
@@ -19,83 +19,10 @@ import {
     Database,
     Palette,
     Server,
+    AlertCircle,
+    RefreshCw,
 } from 'lucide-react';
-
-/* ─── Mock Data ──────────────────────────────────────── */
-const mockScores = [
-    {
-        id: 1,
-        activity: "React Component Library",
-        module: "Frontend Development",
-        date: "2026-02-10",
-        score: 85,
-        max_score: 100,
-        status: "Passed",
-        instructor: "Engr. Sarah Connor",
-        remarks: "Good component structure and prop validation. CSS naming conventions could be more consistent.",
-        improvements: ["Use consistent class naming", "Optimize re-renders"],
-    },
-    {
-        id: 2,
-        activity: "API Integration",
-        module: "Backend Integration",
-        date: "2026-02-12",
-        score: 92,
-        max_score: 100,
-        status: "Passed",
-        instructor: "Engr. John Doe",
-        remarks: "Excellent error handling.",
-        improvements: []
-    },
-    {
-        id: 3,
-        activity: "UI/UX Design",
-        module: "Design Systems",
-        date: "2026-02-14",
-        score: null,
-        max_score: 100,
-        status: "Pending",
-        instructor: "Ms. Jane Smith",
-        remarks: "Waiting for submission review.",
-        improvements: []
-    },
-    {
-        id: 4,
-        activity: "Database Schema",
-        module: "Database Management",
-        date: "2026-02-08",
-        score: 78,
-        max_score: 100,
-        status: "Passed",
-        instructor: "Mr. Alex Router",
-        remarks: "Schema is normalized but misses some foreign keys.",
-        improvements: ["Add foreign keys"]
-    },
-    {
-        id: 5,
-        activity: "System Architecture",
-        module: "System Design",
-        date: "2026-02-15",
-        score: 88,
-        max_score: 100,
-        status: "Passed",
-        instructor: "Mr. Architect",
-        remarks: "Solid diagramming.",
-        improvements: []
-    },
-    {
-        id: 6,
-        activity: "REST API Design",
-        module: "Backend Integration",
-        date: "2026-02-11",
-        score: 90,
-        max_score: 100,
-        status: "Passed",
-        instructor: "Engr. John Doe",
-        remarks: "Clean endpoint design.",
-        improvements: []
-    },
-];
+import { getUserActivities } from '../services';
 
 /* Module icon & color mapping */
 const moduleConfig = {
@@ -109,31 +36,57 @@ const moduleConfig = {
 const defaultConfig = { icon: FileText, color: '#6b7280', bg: 'bg-gray-50', text: 'text-gray-600' };
 
 /* ─── Activity Module ────────────────────────────────── */
-const ActivityModule = () => {
+const ActivityModule = ({ user }) => {
+    const [activities, setActivities] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [selectedActivity, setSelectedActivity] = useState(null);
     const [selectedModule, setSelectedModule] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [filter, setFilter] = useState('All');
     const [showFilter, setShowFilter] = useState(false);
 
+    const fetchActivities = async () => {
+        if (!user?.id) return;
+        setLoading(true);
+        try {
+            const { data, error } = await getUserActivities(user.id);
+            if (error) throw error;
+            setActivities(data || []);
+        } catch (err) {
+            console.error('Error fetching activities:', err);
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchActivities();
+    }, [user?.id]);
+
     /* Group activities by module */
     const moduleGroups = useMemo(() => {
         const groups = {};
-        mockScores.forEach(item => {
-            if (!groups[item.module]) {
-                groups[item.module] = [];
+        activities.forEach(item => {
+            const modName = item.module || 'Unassigned';
+            if (!groups[modName]) {
+                groups[modName] = [];
             }
-            groups[item.module].push(item);
+            groups[modName].push({
+                ...item,
+                activity: item.activity_name || item.activity, // Handle potential aliasing
+            });
         });
         return groups;
-    }, []);
+    }, [activities]);
 
     /* Filter module cards by search */
     const filteredModules = useMemo(() => {
         const modules = Object.entries(moduleGroups).map(([name, activities]) => {
             const scores = activities.filter(a => a.score !== null).map(a => a.score);
             const avgScore = scores.length > 0 ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length) : null;
-            const totalSize = activities.length * 42.3; // mock MB
+            const totalSize = (activities.length * 2.5); // Placeholder for logic
             return { name, activities, avgScore, totalSize: totalSize.toFixed(1) };
         });
 
@@ -153,6 +106,27 @@ const ActivityModule = () => {
         }
         return list;
     }, [selectedModule, filter, moduleGroups]);
+
+    if (loading) return (
+        <div className="flex flex-col items-center justify-center h-64 gap-4">
+            <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+            <p className="text-gray-500 font-medium animate-pulse">Loading activities...</p>
+        </div>
+    );
+
+    if (error) return (
+        <div className="flex flex-col items-center justify-center h-64 gap-4 p-8 text-center bg-white/50 backdrop-blur-xl rounded-[28px] border border-white/60 shadow-lg">
+            <div className="w-12 h-12 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center">
+                <AlertCircle size={24} />
+            </div>
+            <h3 className="text-lg font-bold text-gray-900">Failed to load activities</h3>
+            <p className="text-gray-500 max-w-md">{error}</p>
+            <button onClick={fetchActivities} className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-xl font-bold hover:bg-blue-600 transition-all shadow-lg shadow-blue-500/20">
+                <RefreshCw size={18} /> Retry
+            </button>
+        </div>
+    );
+
 
     return (
         <div className="w-full relative pb-20">

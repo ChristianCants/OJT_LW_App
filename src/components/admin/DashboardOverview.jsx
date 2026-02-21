@@ -7,7 +7,6 @@ import {
     Briefcase,
     FileText,
     CheckCircle2,
-    Pause,
     Target,
     Zap
 } from 'lucide-react';
@@ -204,7 +203,7 @@ const DashboardOverview = () => {
             {/* ─── Bottom Section ───────────────────────────────── */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
                 {/* Team Collaboration */}
-                <div className="lg:col-span-5 p-6" style={glassCard}>
+                <div className="lg:col-span-6 p-6" style={glassCard}>
                     <div className="flex justify-between items-center mb-5">
                         <h3 className="font-bold text-lg text-gray-900">Team Collaboration</h3>
                         <button className="flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-gray-500 bg-white/40 rounded-lg hover:bg-white/60 transition-colors border border-white/30">
@@ -228,7 +227,7 @@ const DashboardOverview = () => {
                 </div>
 
                 {/* Batch Progress */}
-                <div className="lg:col-span-4 p-6 flex flex-col items-center" style={glassCard}>
+                <div className="lg:col-span-6 p-6 flex flex-col items-center" style={glassCard}>
                     <div className="w-full mb-4">
                         <h3 className="font-bold text-lg text-gray-900">Batch Progress</h3>
                     </div>
@@ -252,30 +251,6 @@ const DashboardOverview = () => {
                     </div>
                 </div>
 
-                {/* Time Tracker */}
-                <div className="lg:col-span-3 rounded-3xl p-6 text-white relative overflow-hidden flex flex-col justify-between min-h-[280px]"
-                    style={{ background: 'linear-gradient(145deg, #052e16 0%, #14532d 50%, #15803d 100%)' }}
-                >
-                    <div className="absolute top-0 right-0 w-56 h-56 bg-[#15803d] rounded-full -mr-20 -mt-20 blur-3xl opacity-40" />
-                    <div className="absolute bottom-0 left-0 w-48 h-48 bg-[#166534] rounded-full -ml-16 -mb-16 blur-3xl opacity-30" />
-                    <div className="absolute top-8 right-6 w-28 h-28 border-4 border-white/5 rounded-full" />
-                    <div className="absolute bottom-12 left-4 w-20 h-20 border-4 border-white/5 rounded-full" />
-
-                    <div className="relative z-10">
-                        <h3 className="font-bold text-xl">Time Tracker</h3>
-                    </div>
-                    <div className="relative z-10 text-center my-4">
-                        <span className="text-5xl font-mono font-bold tracking-widest">01:24:08</span>
-                    </div>
-                    <div className="relative z-10 flex justify-center gap-4">
-                        <button className="w-14 h-14 rounded-full bg-white text-[#052e16] flex items-center justify-center hover:scale-110 transition-transform shadow-xl">
-                            <Pause size={22} fill="currentColor" />
-                        </button>
-                        <button className="w-14 h-14 rounded-full bg-[#ef4444] text-white flex items-center justify-center hover:scale-110 transition-transform shadow-xl shadow-red-500/30">
-                            <div className="w-5 h-5 rounded-sm bg-white" />
-                        </button>
-                    </div>
-                </div>
             </div>
         </div>
     );

@@ -16,7 +16,9 @@ import {
     Target,
     Sparkles,
     AlertCircle,
+    RefreshCw,
 } from 'lucide-react';
+import { getUserEvaluations } from '../services';
 
 /* ─── Glass Styles ─────────────────────────────────────── */
 const glassStyle = {
@@ -33,112 +35,6 @@ const GlassOverlay = () => (
     />
 );
 
-/* ─── Mock Evaluation Data (from admin evaluations) ───── */
-const mockEvaluations = [
-    {
-        id: 1,
-        activity: "React Component Library",
-        module: "Frontend Development",
-        date: "2026-02-10",
-        status: "Evaluated",
-        score: 85,
-        maxScore: 100,
-        design: 22,
-        content: 20,
-        presentation: 23,
-        explanation: 20,
-        instructor: "Engr. Sarah Connor",
-        instructorRole: "Lead Frontend Engineer",
-        feedback: "Strong component architecture. Clean code structure with reusable patterns. Good understanding of React lifecycle methods.",
-        improvements: ["Add more unit tests for edge cases", "Improve accessibility features (ARIA labels)"],
-    },
-    {
-        id: 2,
-        activity: "API Integration",
-        module: "Backend Integration",
-        date: "2026-02-12",
-        status: "Evaluated",
-        score: 92,
-        maxScore: 100,
-        design: 24,
-        content: 23,
-        presentation: 22,
-        explanation: 23,
-        instructor: "Engr. John Doe",
-        instructorRole: "Senior Backend Developer",
-        feedback: "Excellent error handling and API design. RESTful principles were followed accurately. Great use of async/await patterns.",
-        improvements: ["Consider implementing rate limiting", "Add comprehensive API documentation"],
-    },
-    {
-        id: 3,
-        activity: "UI/UX Design",
-        module: "Design Systems",
-        date: "2026-02-14",
-        status: "Pending",
-        score: null,
-        maxScore: 100,
-        design: null,
-        content: null,
-        presentation: null,
-        explanation: null,
-        instructor: "Ms. Jane Smith",
-        instructorRole: "UX Lead",
-        feedback: null,
-        improvements: [],
-    },
-    {
-        id: 4,
-        activity: "Database Schema",
-        module: "Database Management",
-        date: "2026-02-08",
-        status: "Evaluated",
-        score: 78,
-        maxScore: 100,
-        design: 20,
-        content: 18,
-        presentation: 21,
-        explanation: 19,
-        instructor: "Mr. Alex Router",
-        instructorRole: "Database Architect",
-        feedback: "Good schema normalization. However, some foreign key relationships were missed in the initial design. Query optimization could be improved.",
-        improvements: ["Normalize tables to 3NF where possible", "Add indexes on frequently queried columns", "Review foreign key cascading behavior"],
-    },
-    {
-        id: 5,
-        activity: "System Architecture",
-        module: "System Design",
-        date: "2026-02-15",
-        status: "Evaluated",
-        score: 88,
-        maxScore: 100,
-        design: 23,
-        content: 21,
-        presentation: 22,
-        explanation: 22,
-        instructor: "Mr. Architect",
-        instructorRole: "Solutions Architect",
-        feedback: "Solid diagramming and architecture decisions. Microservice boundaries were well defined. Good understanding of scalability patterns.",
-        improvements: ["Document the rationale for each architectural decision more deeply"],
-    },
-    {
-        id: 6,
-        activity: "REST API Design",
-        module: "Backend Integration",
-        date: "2026-02-11",
-        status: "Evaluated",
-        score: 90,
-        maxScore: 100,
-        design: 23,
-        content: 22,
-        presentation: 23,
-        explanation: 22,
-        instructor: "Engr. John Doe",
-        instructorRole: "Senior Backend Developer",
-        feedback: "Clean endpoint design with proper HTTP verb usage. Consistent naming conventions and excellent Swagger documentation.",
-        improvements: ["Implement HATEOAS for better API discoverability"],
-    },
-];
-
 /* ─── Module Color Map ─────────────────────────────────── */
 const moduleColors = {
     "Frontend Development": { bg: "bg-blue-50", text: "text-blue-600", accent: "#3b82f6", light: "#eff6ff" },
@@ -152,18 +48,19 @@ const getModuleStyle = (module) => moduleColors[module] || { bg: "bg-gray-50", t
 
 /* ─── Score Badge Component ───────────────────────────── */
 const ScoreBadge = ({ score, maxScore }) => {
-    if (score === null) return (
+    if (score === null || score === undefined) return (
         <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-orange-50/80 text-orange-500 text-xs font-bold">
             <Clock size={12} /> Pending
         </div>
     );
 
-    const pct = (score / maxScore) * 100;
+    const max = maxScore || 100;
+    const pct = (score / max) * 100;
     const color = pct >= 90 ? 'text-emerald-600 bg-emerald-50/80' : pct >= 80 ? 'text-blue-600 bg-blue-50/80' : pct >= 70 ? 'text-amber-600 bg-amber-50/80' : 'text-red-600 bg-red-50/80';
 
     return (
         <span className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-extrabold ${color}`}>
-            <Star size={12} /> {score}/{maxScore}
+            <Star size={12} /> {score}/{max}
         </span>
     );
 };
@@ -171,7 +68,7 @@ const ScoreBadge = ({ score, maxScore }) => {
 /* ─── Criteria Progress Bar ───────────────────────────── */
 const CriteriaBar = ({ label, value, max = 25, color }) => {
     const [width, setWidth] = useState(0);
-    const pct = value !== null ? Math.min((value / max) * 100, 100) : 0;
+    const pct = value !== null && value !== undefined ? Math.min((value / max) * 100, 100) : 0;
 
     useEffect(() => {
         const t = requestAnimationFrame(() => setWidth(pct));
@@ -182,7 +79,7 @@ const CriteriaBar = ({ label, value, max = 25, color }) => {
         <div className="space-y-1.5">
             <div className="flex justify-between items-center">
                 <span className="text-xs text-gray-600 font-medium">{label}</span>
-                <span className="text-xs font-bold" style={{ color }}>{value !== null ? value : '--'}/{max}</span>
+                <span className="text-xs font-bold" style={{ color }}>{value !== null && value !== undefined ? value : '--'}/{max}</span>
             </div>
             <div className="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
                 <div
@@ -235,31 +132,53 @@ const FadeIn = ({ children, delay = 0, className = '' }) => {
 /* ═══════════════════════════════════════════════════════════
    MAIN COMPONENT
    ═══════════════════════════════════════════════════════════ */
-const StudentEvaluationModule = () => {
+const StudentEvaluationModule = ({ user }) => {
+    const [evaluations, setEvaluations] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [filterStatus, setFilterStatus] = useState('All');
     const [selectedEval, setSelectedEval] = useState(null);
 
+    const fetchEvaluations = async () => {
+        if (!user?.id) return;
+        setLoading(true);
+        try {
+            const { data, error } = await getUserEvaluations(user.id);
+            if (error) throw error;
+            setEvaluations(data || []);
+        } catch (err) {
+            console.error('Error fetching evaluations:', err);
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchEvaluations();
+    }, [user?.id]);
+
     /* Stats */
     const stats = useMemo(() => {
-        const evaluated = mockEvaluations.filter(e => e.status === 'Evaluated');
-        const pending = mockEvaluations.filter(e => e.status === 'Pending').length;
+        const evaluated = evaluations.filter(e => e.status === 'Evaluated');
+        const pending = evaluations.filter(e => e.status === 'Pending').length;
         const avgScore = evaluated.length > 0
-            ? Math.round(evaluated.reduce((a, e) => a + e.score, 0) / evaluated.length)
+            ? Math.round(evaluated.reduce((a, e) => a + (e.score || 0), 0) / evaluated.length)
             : 0;
-        const highestScore = evaluated.length > 0 ? Math.max(...evaluated.map(e => e.score)) : 0;
-        return { evaluated: evaluated.length, pending, avgScore, highestScore, total: mockEvaluations.length };
-    }, []);
+        const highestScore = evaluated.length > 0 ? Math.max(...evaluated.map(e => e.score || 0)) : 0;
+        return { evaluated: evaluated.length, pending, avgScore, highestScore, total: evaluations.length };
+    }, [evaluations]);
 
     /* Filtered */
     const filteredEvals = useMemo(() => {
-        return mockEvaluations.filter(ev => {
-            const matchSearch = ev.activity.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                ev.module.toLowerCase().includes(searchQuery.toLowerCase());
+        return evaluations.filter(ev => {
+            const matchSearch = (ev.activity_name || ev.activity || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+                (ev.module || '').toLowerCase().includes(searchQuery.toLowerCase());
             const matchFilter = filterStatus === 'All' || ev.status === filterStatus;
             return matchSearch && matchFilter;
         });
-    }, [searchQuery, filterStatus]);
+    }, [evaluations, searchQuery, filterStatus]);
 
     /* Animated counters */
     const avgScoreCount = useCountUp(stats.avgScore, 900);

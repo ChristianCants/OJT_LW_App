@@ -73,7 +73,7 @@ const UserDashboard = () => {
             <TabPanel active={activeTab === 'analytics'}>
                 {mountedTabs.analytics && (
                     <Suspense fallback={<LoadingSpinner />}>
-                        <StudentAnalyticsModule />
+                        <StudentAnalyticsModule user={user} />
                     </Suspense>
                 )}
             </TabPanel>
@@ -81,17 +81,17 @@ const UserDashboard = () => {
             <TabPanel active={activeTab === 'members'}>
                 {mountedTabs.members && (
                     <Suspense fallback={<LoadingSpinner />}>
-                        <StudentEvaluationModule />
+                        <StudentEvaluationModule user={user} />
                     </Suspense>
                 )}
             </TabPanel>
 
             <TabPanel active={activeTab === 'requirements'}>
-                {mountedTabs.requirements ? <RequirementsModule /> : null}
+                {mountedTabs.requirements ? <RequirementsModule user={user} /> : null}
             </TabPanel>
 
             <TabPanel active={activeTab === 'activities'}>
-                {mountedTabs.activities ? <ActivityModule /> : null}
+                {mountedTabs.activities ? <ActivityModule user={user} /> : null}
             </TabPanel>
         </DashboardLayout>
     );

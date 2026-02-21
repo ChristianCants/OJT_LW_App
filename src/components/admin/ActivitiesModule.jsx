@@ -55,18 +55,18 @@ const statusBadgeConfig = {
 
 /* ── Gradient Presets (Aesthetic Palettes) ─────────────────── */
 const gradientPresets = [
-    { label: 'Midnight Iris',    from: '#262B42', to: '#816EC7' },
-    { label: 'Dusty Rose',       from: '#E5989B', to: '#FFCDB2' },
-    { label: 'Deep Ocean',       from: '#006078', to: '#82BAC4' },
-    { label: 'Warm Coral',       from: '#E37C78', to: '#FFC5A6' },
-    { label: 'Lavender Mist',    from: '#A27CB8', to: '#E3E4FA' },
-    { label: 'Sage & Sand',      from: '#82BAC4', to: '#DCBE90' },
-    { label: 'Berry Wine',       from: '#800000', to: '#F98B68' },
-    { label: 'Forest Depths',    from: '#137054', to: '#54A7A2' },
-    { label: 'Mauve Twilight',   from: '#5B545F', to: '#A97B82' },
-    { label: 'Sunset Glow',      from: '#F98B68', to: '#FCDDD3' },
-    { label: 'Frosted Sage',     from: '#8BA9B3', to: '#E8F3F2' },
-    { label: 'Blush Peony',      from: '#FFB4A2', to: '#E3E4FA' },
+    { label: 'Midnight Iris', from: '#262B42', to: '#816EC7' },
+    { label: 'Dusty Rose', from: '#E5989B', to: '#FFCDB2' },
+    { label: 'Deep Ocean', from: '#006078', to: '#82BAC4' },
+    { label: 'Warm Coral', from: '#E37C78', to: '#FFC5A6' },
+    { label: 'Lavender Mist', from: '#A27CB8', to: '#E3E4FA' },
+    { label: 'Sage & Sand', from: '#82BAC4', to: '#DCBE90' },
+    { label: 'Berry Wine', from: '#800000', to: '#F98B68' },
+    { label: 'Forest Depths', from: '#137054', to: '#54A7A2' },
+    { label: 'Mauve Twilight', from: '#5B545F', to: '#A97B82' },
+    { label: 'Sunset Glow', from: '#F98B68', to: '#FCDDD3' },
+    { label: 'Frosted Sage', from: '#8BA9B3', to: '#E8F3F2' },
+    { label: 'Blush Peony', from: '#FFB4A2', to: '#E3E4FA' },
 ];
 
 function buildGradient(colors) {

@@ -20,16 +20,7 @@ import {
     AreaChart, Area,
     Legend,
 } from 'recharts';
-
-/* ─── Activity Data (shared with ActivityModule) ───────── */
-const mockScores = [
-    { id: 1, activity: "React Component Library", module: "Frontend Development", date: "2026-02-10", score: 85, max_score: 100, status: "Passed", instructor: "Engr. Sarah Connor", remarks: "Good component structure and prop validation." },
-    { id: 2, activity: "API Integration", module: "Backend Integration", date: "2026-02-12", score: 92, max_score: 100, status: "Passed", instructor: "Engr. John Doe", remarks: "Excellent error handling." },
-    { id: 3, activity: "UI/UX Design", module: "Design Systems", date: "2026-02-14", score: null, max_score: 100, status: "Pending", instructor: "Ms. Jane Smith", remarks: "Waiting for submission review." },
-    { id: 4, activity: "Database Schema", module: "Database Management", date: "2026-02-08", score: 78, max_score: 100, status: "Passed", instructor: "Mr. Alex Router", remarks: "Schema is normalized but misses some foreign keys." },
-    { id: 5, activity: "System Architecture", module: "System Design", date: "2026-02-15", score: 88, max_score: 100, status: "Passed", instructor: "Mr. Architect", remarks: "Solid diagramming." },
-    { id: 6, activity: "REST API Design", module: "Backend Integration", date: "2026-02-11", score: 90, max_score: 100, status: "Passed", instructor: "Engr. John Doe", remarks: "Clean endpoint design." },
-];
+import { getUserActivities } from '../services';
 
 /* ─── Helpers ──────────────────────────────────────────── */
 const moduleColors = {
@@ -171,25 +162,47 @@ const FadeInSection = ({ children, delay = 0, className = '' }) => {
 };
 
 /* ─── Main Component ──────────────────────────────────── */
-const StudentAnalyticsModule = () => {
+const StudentAnalyticsModule = ({ user }) => {
+    const [activities, setActivities] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [activeFilter, setActiveFilter] = useState('All');
     const [trendView, setTrendView] = useState('Monthly');
 
+    const fetchActivities = async () => {
+        if (!user?.id) return;
+        setLoading(true);
+        try {
+            const { data, error } = await getUserActivities(user.id);
+            if (error) throw error;
+            setActivities(data || []);
+        } catch (err) {
+            console.error('Error fetching analytics activities:', err);
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchActivities();
+    }, [user?.id]);
+
     /* Computed Stats */
     const stats = useMemo(() => {
-        const scored = mockScores.filter(s => s.score !== null);
-        const avgScore = scored.length > 0 ? Math.round(scored.reduce((a, b) => a + b.score, 0) / scored.length) : 0;
+        const scored = activities.filter(s => s.score !== null);
+        const avgScore = scored.length > 0 ? Math.round(scored.reduce((a, b) => a + (b.score || 0), 0) / scored.length) : 0;
         const completed = scored.length;
-        const pending = mockScores.filter(s => s.status === 'Pending').length;
-        const modules = [...new Set(mockScores.map(s => s.module))];
-        const completionPct = Math.round((completed / mockScores.length) * 100);
-        return { avgScore, completed, pending, totalModules: modules.length, completionPct, total: mockScores.length };
-    }, []);
+        const pending = activities.filter(s => s.status === 'Pending').length;
+        const modules = [...new Set(activities.map(s => s.module))];
+        const completionPct = activities.length > 0 ? Math.round((completed / activities.length) * 100) : 0;
+        return { avgScore, completed, pending, totalModules: modules.length, completionPct, total: activities.length };
+    }, [activities]);
 
     /* Module Bar Chart Data */
     const moduleBarData = useMemo(() => {
         const groups = {};
-        mockScores.forEach(s => {
+        activities.forEach(s => {
             if (!groups[s.module]) groups[s.module] = { scores: [], count: 0 };
             groups[s.module].count++;
             if (s.score !== null) groups[s.module].scores.push(s.score);
@@ -201,19 +214,19 @@ const StudentAnalyticsModule = () => {
             max: 100,
             color: moduleColors[name] || '#6b7280',
         }));
-    }, []);
+    }, [activities]);
 
     /* Score Trend Data */
     const trendData = useMemo(() => {
-        return mockScores
+        return activities
             .filter(s => s.score !== null)
             .sort((a, b) => new Date(a.date) - new Date(b.date))
             .map(s => ({
                 date: new Date(s.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
                 score: s.score,
-                activity: s.activity,
+                activity: s.activity_name || s.activity,
             }));
-    }, []);
+    }, [activities]);
 
     /* Donut Data */
     const donutData = [
@@ -229,16 +242,24 @@ const StudentAnalyticsModule = () => {
 
     /* Filtered activities for table */
     const filteredActivities = useMemo(() => {
-        if (activeFilter === 'All') return mockScores;
-        return mockScores.filter(s => s.status === activeFilter);
-    }, [activeFilter]);
+        if (activeFilter === 'All') return activities;
+        return activities.filter(s => s.status === activeFilter);
+    }, [activities, activeFilter]);
 
     /* Recent feedback */
     const recentFeedback = useMemo(() => {
-        return mockScores
+        return activities
             .filter(s => s.score !== null && s.remarks)
             .sort((a, b) => new Date(b.date) - new Date(a.date));
-    }, []);
+    }, [activities]);
+
+    if (loading) return (
+        <div className="flex flex-col items-center justify-center h-64 gap-4">
+            <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+            <p className="text-gray-500 font-medium animate-pulse">Loading analytics...</p>
+        </div>
+    );
+
 
     return (
         <div className="w-full pb-20">
